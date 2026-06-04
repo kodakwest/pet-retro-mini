@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PET Retro Mini Mockup</title>
+<style>
+  :root {
+    --bg-color: #1a1a1a;
+    --panel-bg: #222222;
+    --surface: #2a2a2a;
+    --text-primary: #e0e0e0;
+    --text-muted: #888888;
+    --accent-green: #33ff33;
+    --accent-amber: #ffb000;
+    --border: #3a3a3a;
+    --error: #ff4444;
+    --font-ui: "Inter", system-ui, -apple-system, sans-serif;
+    --font-pet: "Courier New", Courier, monospace; /* Pseudo-PETSCII */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: #000; /* Desktop background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: var(--font-ui);
+    color: var(--text-primary);
+    overflow: hidden;
+  }
+
+  /* Windows Window Chrome */
+  .window {
+    width: 800px;
+    height: 600px;
+    background-color: var(--bg-color);
+    border: 1px solid #444;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .title-bar {
+    height: 32px;
+    background-color: #000; /* Dark mode windows title bar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 12px;
+    user-select: none;
+  }
+
+  .title-text {
+    font-size: 12px;
+    color: #fff;
+  }
+
+  .window-controls {
+    display: flex;
+    height: 100%;
+  }
+
+  .window-control {
+    width: 46px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    cursor: default;
+    font-size: 14px;
+  }
+
+  .window-control:hover { background-color: rgba(255,255,255,0.1); }
+  .window-control.close:hover { background-color: #e81123; color: white; }
+
+  /* Menu Bar */
+  .menu-bar {
+    height: 24px;
+    background-color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .menu-item {
+    padding: 2px 8px;
+    cursor: default;
+    border-radius: 4px;
+  }
+
+  .menu-item:hover { background-color: rgba(255,255,255,0.1); }
+
+  /* Main View */
+  .main-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* Display Area */
+  .display-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+  }
+
+  .pet-screen {
+    width: 640px;
+    height: 400px;
+    background-color: #0a0a0a;
+    border: 8px solid #111;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8) inset, 0 0 10px rgba(0,0,0,0.5);
+  }
+
+  /* CRT Effect Overlay */
+  .pet-screen::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Scanlines */
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 6px 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  /* Phosphor glow */
+  .pet-screen::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle, rgba(51, 255, 51, 0.05) 0%, rgba(0,0,0,0.4) 100%);
+    z-index: 11;
+    pointer-events: none;
+  }
+
+  .screen-content {
+    padding: 16px;
+    font-family: var(--font-pet);
+    font-size: 18px;
+    color: var(--accent-green);
+    text-shadow: 0 0 4px var(--accent-green);
+    line-height: 1.2;
+    z-index: 5;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    white-space: pre-wrap;
+    text-transform: uppercase;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 12px;
+    height: 18px;
+    background-color: var(--accent-green);
+    box-shadow: 0 0 6px var(--accent-green);
+    animation: blink 1s step-end infinite;
+    vertical-align: bottom;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Toast Notification */
+  .toast {
+    position: absolute;
+    bottom: 80px; /* Above launcher bar */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(42, 42, 42, 0.9);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+    z-index: 50;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+  }
+
+  .toast.hidden {
+    opacity: 0;
+  }
+
+  /* Launcher Bar */
+  .launcher-bar {
+    height: 60px;
+    background-color: var(--panel-bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .game-chip {
+    flex: 1;
+    height: 40px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 8px;
+  }
+
+  .game-chip:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  .game-chip:active {
+    transform: translateY(0);
+  }
+
+  .game-chip.active {
+    border-color: var(--accent-green);
+    background-color: rgba(51, 255, 51, 0.1);
+    color: var(--accent-green);
+  }
+
+  .game-icon {
+    width: 16px;
+    height: 16px;
+    background-color: #444;
+    border-radius: 4px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .btn-load {
+    flex: 1;
+    height: 40px;
+    background-color: transparent;
+    border: 1px dashed var(--text-muted);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-muted);
+    font-size: 13px;
+    white-space: nowrap;
+    padding: 0 8px;
+  }
+
+  .btn-load:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    background-color: rgba(255,255,255,0.05);
+  }
+
+  /* Status Bar */
+  .status-bar {
+    height: 28px;
+    background-color: var(--panel-bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Icons */
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="window" id="app-window">
+  <!-- Title Bar -->
+  <div class="title-bar">
+    <div class="title-text">PET Retro Mini</div>
+    <div class="window-controls">
+      <div class="window-control">─</div>
+      <div class="window-control">□</div>
+      <div class="window-control close">✕</div>
+    </div>
+  </div>
+
+  <!-- Menu Bar -->
+  <div class="menu-bar">
+    <div class="menu-item">File</div>
+    <div class="menu-item">Machine</div>
+    <div class="menu-item">View</div>
+    <div class="menu-item">Help</div>
+  </div>
+
+  <div class="main-view">
+    <!-- Display Area -->
+    <div class="display-container" id="display-container">
+      <div class="pet-screen" id="pet-screen">
+        <div class="screen-content" id="screen-content">
+*** COMMODORE BASIC ***
+
+ 31743 BYTES FREE
+
+READY.
+<span class="cursor"></span></div>
+      </div>
+      
+      <!-- Toast Notification -->
+      <div class="toast" id="welcome-toast">Welcome to PET Retro Mini. Pick a game below, or just explore BASIC.</div>
+    </div>
+
+    <!-- Launcher Bar -->
+    <div class="launcher-bar">
+      <div class="game-chip" onclick="launchGame(event, 'Zork I')">
+        <div class="game-icon" style="background:#5c4033;"></div> Zork I
+      </div>
+      <div class="game-chip" onclick="launchGame(event, 'Miner')">
+        <div class="game-icon" style="background:#4a4a4a;"></div> Miner
+      </div>
+      <div class="game-chip" onclick="launchGame(event, 'Lunar Lander')">
+        <div class="game-icon" style="background:#333366;"></div> Lunar Lander
+      </div>
+      <div class="game-chip" onclick="launchGame(event, 'Dungeon')">
+        <div class="game-icon" style="background:#663333;"></div> Dungeon
+      </div>
+      <div class="game-chip" onclick="launchGame(event, 'PET Invaders')">
+        <div class="game-icon" style="background:#336633;"></div> PET Invaders
+      </div>
+      <div class="btn-load" id="btn-load">
+        <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg> Load .prg...
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-item" id="status-model">PET 2001</div>
+      <div class="status-item" style="color: var(--text-primary);" id="status-game">BASIC</div>
+      <div class="status-item">100%</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let toastTimeout;
+
+  function showToast(message) {
+    const toast = document.getElementById('welcome-toast');
+    toast.innerText = message;
+    toast.classList.remove('hidden');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.add('hidden');
+    }, 4000);
+  }
+
+  // Hide initial toast after 5 seconds
+  toastTimeout = setTimeout(() => {
+    document.getElementById('welcome-toast').classList.add('hidden');
+  }, 5000);
+
+  // Drag and drop overlay visual
+  const appWindow = document.getElementById('app-window');
+  
+  appWindow.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    appWindow.style.boxShadow = '0 0 0 2px var(--accent-green) inset, 0 10px 30px rgba(0,0,0,0.8)';
+  });
+  
+  appWindow.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    appWindow.style.boxShadow = '0 10px 30px rgba(0,0,0,0.8)';
+  });
+
+  appWindow.addEventListener('drop', (e) => {
+    e.preventDefault();
+    appWindow.style.boxShadow = '0 10px 30px rgba(0,0,0,0.8)';
+    showToast("Loaded 'custom.prg' at $1C00. Running...");
+    document.getElementById('status-game').innerText = "custom.prg";
+    setScreenContent("LOADING...\n\nREADY.\nRUN\n\nCUSTOM PROGRAM RUNNING...\n\n");
+    
+    // Clear active chips
+    document.querySelectorAll('.game-chip').forEach(c => c.classList.remove('active'));
+  });
+
+  function launchGame(event, gameName) {
+    // Update active state
+    document.querySelectorAll('.game-chip').forEach(c => c.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+    // Update status
+    document.getElementById('status-game').innerText = gameName;
+
+    let model = "PET 2001";
+    if(gameName === "Zork I") {
+      model = "CBM 4032";
+      showToast("Switching to CBM 4032 for Zork I");
+    } else {
+      showToast(`Loading ${gameName}...`);
+    }
+    document.getElementById('status-model').innerText = model;
+
+    // Simulate loading
+    setScreenContent("LOADING...\n\nREADY.\nRUN\n\n" + gameName.toUpperCase() + " IS RUNNING...\n\n");
+  }
+
+  function setScreenContent(text) {
+    // Need to handle cursor properly
+    document.getElementById('screen-content').innerHTML = text.replace(/\n/g, '<br>') + '<span class="cursor"></span>';
+  }
+
+  // Set initial content properly
+  document.getElementById('screen-content').innerHTML = "*** COMMODORE BASIC ***<br><br> 31743 BYTES FREE<br><br>READY.<br><span class=\"cursor\"></span>";
+
+  // Load button
+  document.getElementById('btn-load').addEventListener('click', () => {
+    showToast("Open File Dialog (Simulated)");
+  });
+</script>
+</body>
+</html>
