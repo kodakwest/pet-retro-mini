@@ -311,6 +311,307 @@
     fill: currentColor;
   }
 
+
+  /* Dropdowns */
+  .menu-item { position: relative; }
+  .menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    z-index: 100;
+    min-width: 150px;
+    padding: 4px 0;
+  }
+  .menu-item:hover .menu-dropdown, .menu-dropdown.show {
+    display: block;
+  }
+  .dropdown-item {
+    padding: 4px 12px;
+    color: var(--text-primary);
+    cursor: default;
+    white-space: nowrap;
+  }
+  .dropdown-item:hover { background-color: var(--accent-green); color: #000; }
+  .dropdown-item.disabled { color: var(--text-muted); pointer-events: none; }
+
+  /* Search Bar */
+  .search-bar-container {
+    padding: 8px 16px;
+    background: rgba(34, 34, 34, 0.7);
+    backdrop-filter: blur(4px);
+    border-top: 1px solid var(--border);
+    display: flex;
+  }
+  .search-input {
+    flex: 1;
+    height: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    padding: 0 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+  }
+  .search-input:focus { outline: 1px solid var(--accent-green); }
+
+  /* Screenshot Flash */
+  .flash-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+    transition: opacity 0.1s ease-out;
+  }
+  .flash-overlay.flash { opacity: 1; }
+
+  /* Screenshot Button */
+  .btn-screenshot {
+    cursor: pointer;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+  .btn-screenshot:hover { background-color: rgba(255,255,255,0.1); }
+
+  /* Command Drawer */
+  .drawer-backdrop {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+  }
+  .drawer-backdrop.show { display: block; }
+  .command-drawer {
+    position: absolute;
+    top: 0; right: -260px;
+    width: 260px;
+    height: 100%;
+    background-color: var(--panel-bg);
+    border-left: 1px solid var(--border);
+    z-index: 201;
+    transition: right 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.5);
+  }
+  .command-drawer.open { right: 0; }
+  
+  .drawer-tab {
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 60px;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  }
+  .drawer-tab::after {
+    content: "⋮";
+    color: var(--text-muted);
+    font-size: 20px;
+  }
+
+  .drawer-header {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+  }
+  .drawer-close { cursor: pointer; color: var(--text-muted); }
+  .drawer-close:hover { color: var(--text-primary); }
+
+  .drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .drawer-section-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .basic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .btn-basic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent-green);
+    font-family: var(--font-pet);
+    font-size: 12px;
+    padding: 6px 0;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-basic:hover { background: #333; border-color: var(--accent-green); }
+
+  .type-to-pet {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .type-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent-green);
+    font-family: var(--font-pet);
+    padding: 6px;
+    font-size: 12px;
+    resize: vertical;
+    min-height: 60px;
+  }
+  .btn-send {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 4px;
+    padding: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+  }
+  .btn-send:hover { background: #333; }
+
+  .petscii-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+  }
+  .petscii-cell {
+    aspect-ratio: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-green);
+    font-family: var(--font-pet);
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+  }
+  .petscii-cell:hover { background: #333; border-color: var(--accent-green); }
+  .petscii-cell:hover::after {
+    content: attr(data-code);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .shortcut-list {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .shortcut-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .shortcut-key { color: var(--text-primary); background: #333; padding: 0 4px; border-radius: 3px; font-family: monospace; }
+
+  /* Shortcut Modal */
+  .modal-backdrop {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 300;
+    backdrop-filter: blur(2px);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-backdrop.show { display: flex; }
+  .shortcut-modal {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 480px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+  }
+  .modal-close { cursor: pointer; color: var(--text-muted); }
+  .modal-close:hover { color: var(--text-primary); }
+  .modal-content {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .modal-section-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 4px;
+  }
+  .modal-shortcut-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .modal-shortcut-key {
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+
 </style>
 </head>
 <body>
@@ -328,16 +629,36 @@
 
   <!-- Menu Bar -->
   <div class="menu-bar">
-    <div class="menu-item">File</div>
+    <div class="menu-item" id="menu-file">
+      File
+      <div class="menu-dropdown">
+        <div class="dropdown-item">Load Program...</div>
+        <div class="dropdown-item">Save State</div>
+        <div style="height: 1px; background: var(--border); margin: 4px 0;"></div>
+        <div class="dropdown-item disabled" style="font-size: 11px; padding: 2px 12px;">Recent Programs</div>
+        <div class="dropdown-item">1. zork.prg</div>
+        <div class="dropdown-item">2. lunar.prg</div>
+        <div class="dropdown-item">3. invader.prg</div>
+        <div class="dropdown-item">4. dungeon.prg</div>
+        <div class="dropdown-item">5. miner.prg</div>
+      </div>
+    </div>
     <div class="menu-item">Machine</div>
     <div class="menu-item">View</div>
-    <div class="menu-item">Help</div>
+    <div class="menu-item" id="menu-help">
+      Help
+      <div class="menu-dropdown">
+        <div class="dropdown-item" onclick="toggleShortcutModal()">Shortcuts (Ctrl+/)</div>
+        <div class="dropdown-item">About</div>
+      </div>
+    </div>
   </div>
 
   <div class="main-view">
     <!-- Display Area -->
     <div class="display-container" id="display-container">
       <div class="pet-screen" id="pet-screen">
+        <div class="flash-overlay" id="flash-overlay"></div>
         <div class="screen-content" id="screen-content">
 *** COMMODORE BASIC ***
 
@@ -351,21 +672,26 @@ READY.
       <div class="toast" id="welcome-toast">Welcome to PET Retro Mini. Pick a game below, or just explore BASIC.</div>
     </div>
 
+    <!-- Search/Filter Bar -->
+    <div class="search-bar-container">
+      <input type="text" class="search-input" id="search-input" placeholder="Search games or type a BASIC command...">
+    </div>
+
     <!-- Launcher Bar -->
-    <div class="launcher-bar">
-      <div class="game-chip" onclick="launchGame(event, 'Zork I')">
+    <div class="launcher-bar" id="launcher-bar">
+      <div class="game-chip" data-name="zork i" onclick="launchGame(event, 'Zork I')">
         <div class="game-icon" style="background:#5c4033;"></div> Zork I
       </div>
-      <div class="game-chip" onclick="launchGame(event, 'Miner')">
+      <div class="game-chip" data-name="miner" onclick="launchGame(event, 'Miner')">
         <div class="game-icon" style="background:#4a4a4a;"></div> Miner
       </div>
-      <div class="game-chip" onclick="launchGame(event, 'Lunar Lander')">
+      <div class="game-chip" data-name="lunar lander" onclick="launchGame(event, 'Lunar Lander')">
         <div class="game-icon" style="background:#333366;"></div> Lunar Lander
       </div>
-      <div class="game-chip" onclick="launchGame(event, 'Dungeon')">
+      <div class="game-chip" data-name="dungeon" onclick="launchGame(event, 'Dungeon')">
         <div class="game-icon" style="background:#663333;"></div> Dungeon
       </div>
-      <div class="game-chip" onclick="launchGame(event, 'PET Invaders')">
+      <div class="game-chip" data-name="pet invaders" onclick="launchGame(event, 'PET Invaders')">
         <div class="game-icon" style="background:#336633;"></div> PET Invaders
       </div>
       <div class="btn-load" id="btn-load">
@@ -377,12 +703,233 @@ READY.
     <div class="status-bar">
       <div class="status-item" id="status-model">PET 2001</div>
       <div class="status-item" style="color: var(--text-primary);" id="status-game">BASIC</div>
-      <div class="status-item">100%</div>
+      <div class="status-item">
+        100%
+        <div class="btn-screenshot" id="btn-screenshot" title="Take Screenshot">
+          <svg viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Drawer Backdrop -->
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+  <!-- Command Drawer -->
+  <div class="command-drawer" id="command-drawer">
+    <div class="drawer-tab" id="drawer-tab"></div>
+    <div class="drawer-header">
+      Command Drawer
+      <div class="drawer-close" id="drawer-close">✕</div>
+    </div>
+    <div class="drawer-content">
+      
+      <div>
+        <div class="drawer-section-title">Quick BASIC Commands</div>
+        <div class="basic-grid">
+          <div class="btn-basic" onclick="sendBasicCommand('RUN')">RUN</div>
+          <div class="btn-basic" onclick="sendBasicCommand('LIST')">LIST</div>
+          <div class="btn-basic" onclick="sendBasicCommand('LOAD')">LOAD</div>
+          <div class="btn-basic" onclick="sendBasicCommand('SAVE')">SAVE</div>
+          <div class="btn-basic" onclick="sendBasicCommand('SYS 64738')">SYS</div>
+          <div class="btn-basic" onclick="sendBasicCommand('POKE 59468,14')">POKE</div>
+          <div class="btn-basic" onclick="sendBasicCommand('PRINT \"HELLO\"')">PRINT</div>
+          <div class="btn-basic" onclick="sendBasicCommand('CLEAR')">CLEAR</div>
+        </div>
+      </div>
+
+      <div class="type-to-pet">
+        <div class="drawer-section-title">Type to PET</div>
+        <textarea class="type-input" id="type-input" placeholder="Type text here to send to the PET keyboard buffer..."></textarea>
+        <div class="btn-send" onclick="sendTypeText()">SEND TO PET</div>
+      </div>
+
+      <div>
+        <div class="drawer-section-title">PETSCII Quick Pick</div>
+        <div class="petscii-grid" id="petscii-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div>
+        <div class="drawer-section-title">Shortcuts</div>
+        <div class="shortcut-list">
+          <div class="shortcut-row"><span>Load Program</span><span class="shortcut-key">Ctrl+O</span></div>
+          <div class="shortcut-row"><span>Reset</span><span class="shortcut-key">Ctrl+R</span></div>
+          <div class="shortcut-row"><span>Fullscreen</span><span class="shortcut-key">F11</span></div>
+          <div class="shortcut-row"><span>Toggle Drawer</span><span class="shortcut-key">Ctrl+Shift+C</span></div>
+          <div class="shortcut-row"><span>Launch Game</span><span class="shortcut-key">1-5</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Shortcut Modal Overlay -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="shortcut-modal">
+      <div class="modal-header">
+        Keyboard Shortcuts
+        <div class="modal-close" onclick="toggleShortcutModal()">✕</div>
+      </div>
+      <div class="modal-content">
+        <div>
+          <div class="modal-section-title">General</div>
+          <div class="modal-shortcut-row"><span>Show Shortcuts</span><span class="modal-shortcut-key">Ctrl + /</span></div>
+          <div class="modal-shortcut-row"><span>Toggle Drawer</span><span class="modal-shortcut-key">Ctrl + Shift + C</span></div>
+          <div class="modal-shortcut-row"><span>Fullscreen</span><span class="modal-shortcut-key">F11</span></div>
+          <div class="modal-shortcut-row"><span>Take Screenshot</span><span class="modal-shortcut-key">Ctrl + S</span></div>
+        </div>
+        <div>
+          <div class="modal-section-title">Emulation</div>
+          <div class="modal-shortcut-row"><span>Load Program</span><span class="modal-shortcut-key">Ctrl + O</span></div>
+          <div class="modal-shortcut-row"><span>Reset PET</span><span class="modal-shortcut-key">Ctrl + R</span></div>
+          <div class="modal-shortcut-row"><span>Pause/Resume</span><span class="modal-shortcut-key">Ctrl + P</span></div>
+          <div class="modal-shortcut-row"><span>Warp Speed</span><span class="modal-shortcut-key">Hold Tab</span></div>
+        </div>
+        <div>
+          <div class="modal-section-title">Games</div>
+          <div class="modal-shortcut-row"><span>Launch Game 1</span><span class="modal-shortcut-key">1</span></div>
+          <div class="modal-shortcut-row"><span>Launch Game 2</span><span class="modal-shortcut-key">2</span></div>
+          <div class="modal-shortcut-row"><span>Launch Game 3</span><span class="modal-shortcut-key">3</span></div>
+          <div class="modal-shortcut-row"><span>Launch Game 4</span><span class="modal-shortcut-key">4</span></div>
+          <div class="modal-shortcut-row"><span>Launch Game 5</span><span class="modal-shortcut-key">5</span></div>
+        </div>
+        <div>
+          <div class="modal-section-title">Display</div>
+          <div class="modal-shortcut-row"><span>Toggle CRT FX</span><span class="modal-shortcut-key">F9</span></div>
+          <div class="modal-shortcut-row"><span>Toggle Color/Green</span><span class="modal-shortcut-key">F10</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
+
+  // Generate PETSCII grid
+  const petsciiGrid = document.getElementById('petscii-grid');
+  const petsciiChars = [
+    '♠', '│', '─', '♥', '♣', '♦', '┌', '┐',
+    '└', '┘', '├', '┤', '┬', '┴', '┼', '╭',
+    '╮', '╰', '╯', '═', '║', '╒', '╓', '╔',
+    '╕', '╖', '╗', '╘', '╙', '╚', '╛', '╜'
+  ];
+  petsciiChars.forEach((char, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'petscii-cell';
+    cell.innerText = char;
+    cell.setAttribute('data-code', `CHR$(${160 + i})`);
+    cell.onclick = () => sendBasicCommand(`PRINT CHR$(${160 + i})`);
+    petsciiGrid.appendChild(cell);
+  });
+
+  // Drawer Toggle
+  const commandDrawer = document.getElementById('command-drawer');
+  const drawerBackdrop = document.getElementById('drawer-backdrop');
+  
+  function toggleDrawer() {
+    const isOpen = commandDrawer.classList.contains('open');
+    if (isOpen) {
+      commandDrawer.classList.remove('open');
+      drawerBackdrop.classList.remove('show');
+    } else {
+      commandDrawer.classList.add('open');
+      drawerBackdrop.classList.add('show');
+    }
+  }
+
+  document.getElementById('drawer-tab').addEventListener('click', toggleDrawer);
+  document.getElementById('drawer-close').addEventListener('click', toggleDrawer);
+  drawerBackdrop.addEventListener('click', toggleDrawer);
+
+  // Shortcut Modal Toggle
+  const modalBackdrop = document.getElementById('modal-backdrop');
+  function toggleShortcutModal() {
+    if (modalBackdrop.classList.contains('show')) {
+      modalBackdrop.classList.remove('show');
+    } else {
+      modalBackdrop.classList.add('show');
+    }
+  }
+  
+  modalBackdrop.addEventListener('click', (e) => {
+    if(e.target === modalBackdrop) toggleShortcutModal();
+  });
+
+  // Screenshot
+  document.getElementById('btn-screenshot').addEventListener('click', () => {
+    const flash = document.getElementById('flash-overlay');
+    flash.classList.add('flash');
+    setTimeout(() => flash.classList.remove('flash'), 100);
+    showToast("Screenshot saved to Desktop/PET-Retro-Mini-Screenshots/");
+  });
+
+  // Search Filter
+  const searchInput = document.getElementById('search-input');
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    document.querySelectorAll('.game-chip').forEach(chip => {
+      if (chip.getAttribute('data-name').includes(query)) {
+        chip.style.display = '';
+      } else {
+        chip.style.display = 'none';
+      }
+    });
+  });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      sendBasicCommand(e.target.value);
+      e.target.value = '';
+      searchInput.dispatchEvent(new Event('input')); // reset filter
+    }
+  });
+
+  // Commands
+  function sendBasicCommand(cmd) {
+    showToast(`"${cmd}" sent to PET`);
+    const contentDiv = document.getElementById('screen-content');
+    if(cmd === '?' || cmd === 'CLEAR') {
+       contentDiv.innerHTML = "READY.<br><span class=\"cursor\"></span>";
+    } else {
+       let currentHtml = contentDiv.innerHTML;
+       currentHtml = currentHtml.replace('<span class="cursor"></span>', '');
+       currentHtml = currentHtml.replace(/<br>\s*$/, '');
+       contentDiv.innerHTML = currentHtml + "<br>" + cmd.toUpperCase() + "<br><br>READY.<br><span class=\"cursor\"></span>";
+       contentDiv.parentElement.scrollTop = contentDiv.parentElement.scrollHeight;
+    }
+  }
+
+  function sendTypeText() {
+    const text = document.getElementById('type-input').value;
+    if(text) {
+      sendBasicCommand(text);
+      document.getElementById('type-input').value = '';
+    }
+  }
+
+  // Keyboard Shortcuts
+  document.addEventListener('keydown', (e) => {
+    // Ctrl+/ or ?
+    if ((e.ctrlKey && e.key === '/') || (!e.ctrlKey && e.key === '?')) {
+      if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        toggleShortcutModal();
+      }
+    }
+    // Escape
+    if (e.key === 'Escape') {
+      if (modalBackdrop.classList.contains('show')) toggleShortcutModal();
+      if (commandDrawer.classList.contains('open')) toggleDrawer();
+    }
+    // Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && (e.key === 'c' || e.key === 'C')) {
+      e.preventDefault();
+      toggleDrawer();
+    }
+  });
+
   let toastTimeout;
 
   function showToast(message) {
