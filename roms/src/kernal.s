@@ -27,6 +27,7 @@ cursor_x    = $00f0
 cursor_y    = $00f1
 screen_ptr  = $00f2
 tmp_key     = $00f4
+scroll_ptr  = $00f5
 irqlo       = $0200
 irqhi       = $0201
 
@@ -188,15 +189,15 @@ scroll:
     sta cursor_y
     jsr calc_screen_ptr
     lda #<SCREEN
-    sta irqlo
+    sta scroll_ptr
     lda #>SCREEN
-    sta irqhi
+    sta scroll_ptr+1
     ldx #$18
 scroll_row:
     ldy #$00
 scroll_col:
     lda (screen_ptr),y
-    sta (irqlo),y
+    sta (scroll_ptr),y
     iny
     cpy #COLS
     bne scroll_col
@@ -208,12 +209,12 @@ scroll_col:
     adc #$00
     sta screen_ptr+1
     clc
-    lda irqlo
+    lda scroll_ptr
     adc #COLS
-    sta irqlo
-    lda irqhi
+    sta scroll_ptr
+    lda scroll_ptr+1
     adc #$00
-    sta irqhi
+    sta scroll_ptr+1
     dex
     bne scroll_row
     lda #$18
