@@ -1,0 +1,14 @@
+diff --git a/vice/configure.ac b/vice/configure.ac
+index 7e35d0f..1111111 100644
+--- a/vice/configure.ac
++++ b/vice/configure.ac
+@@ -31,6 +31,9 @@ AC_INIT([vice], [vice_version])
+ dnl We save the command line options here since AM_INIT_AUTOMAKE and other
+ dnl macros clobber $@:
+ cmdline_options="$@"
++dnl PET Retro Mini builds only the embedded xpet target. The configure command
++dnl still passes EMUTYPE=xpet; this marker keeps the local patch auditable.
++pet_retro_mini_emutype_default="xpet"
+ AC_DEFINE_UNQUOTED([CONFIGURE_FLAGS], ["$cmdline_options"],[Flags passed to configure])
+ AC_CONFIG_SRCDIR([src/maincpu.c])
+ AM_INIT_AUTOMAKE([-Wno-portability foreign])

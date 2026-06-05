@@ -1,0 +1,10 @@
+diff --git a/vice/configure.ac b/vice/configure.ac
+index 1111111..2222222 100644
+--- a/vice/configure.ac
++++ b/vice/configure.ac
+@@ -34,2 +34,5 @@ cmdline_options="$@"
+ pet_retro_mini_emutype_default="xpet"
++dnl PET Retro Mini uses the SDL2 frontend path only. Build scripts pass
++dnl --with-sdl2 and avoid GTK dependencies.
++pet_retro_mini_ui_default="sdl2"
+ AC_DEFINE_UNQUOTED([CONFIGURE_FLAGS], ["$cmdline_options"],[Flags passed to configure])

@@ -1,5 +1,6 @@
 APP := pet-retro-mini
 SRC_DIR := src/launcher
+BRIDGE_DIR := src/bridge
 BUILD_DIR := build
 DIST_DIR := dist
 
@@ -11,13 +12,16 @@ MINGW_CC := $(shell $(CC) -dumpmachine 2>/dev/null | grep -E "mingw|msys" >/dev/
 SDL2_CONFIG := $(shell command -v sdl2-config 2>/dev/null)
 PKG_CONFIG := $(shell command -v pkg-config 2>/dev/null)
 
-SOURCES := $(wildcard $(SRC_DIR)/*.c)
-OBJECTS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
+LAUNCHER_SOURCES := $(wildcard $(SRC_DIR)/*.c)
+BRIDGE_SOURCES := $(wildcard $(BRIDGE_DIR)/*.c)
+SOURCES := $(LAUNCHER_SOURCES) $(BRIDGE_SOURCES)
+OBJECTS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/launcher/%.o,$(LAUNCHER_SOURCES)) \
+           $(patsubst $(BRIDGE_DIR)/%.c,$(BUILD_DIR)/bridge/%.o,$(BRIDGE_SOURCES))
 RESOURCE := $(BUILD_DIR)/resources.res
 TARGET := $(DIST_DIR)/$(APP).exe
 
 CFLAGS ?= -std=c99 -Wall -Wextra -Wpedantic -O2
-CFLAGS += -DAPP_NAME=\"PET\ Retro\ Mini\"
+CFLAGS += -DAPP_NAME=\"PET\ Retro\ Mini\" -I$(SRC_DIR) -I$(BRIDGE_DIR)
 LDFLAGS ?=
 LDLIBS ?=
 
@@ -64,8 +68,12 @@ $(TARGET): $(OBJECTS) $(if $(filter windows,$(PLATFORM)),$(RESOURCE))
 	@mkdir -p $(DIST_DIR)
 	$(CC) $(OBJECTS) $(if $(filter windows,$(PLATFORM)),$(RESOURCE)) $(LDFLAGS) -o $@ $(LDLIBS)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(SRC_DIR)/*.h
-	@mkdir -p $(BUILD_DIR)
+$(BUILD_DIR)/launcher/%.o: $(SRC_DIR)/%.c $(SRC_DIR)/*.h $(BRIDGE_DIR)/*.h
+	@mkdir -p $(BUILD_DIR)/launcher
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/bridge/%.o: $(BRIDGE_DIR)/%.c $(BRIDGE_DIR)/*.h
+	@mkdir -p $(BUILD_DIR)/bridge
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(RESOURCE): $(SRC_DIR)/resources.rc $(SRC_DIR)/app.manifest
