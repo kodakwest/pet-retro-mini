@@ -1,0 +1,11 @@
+build/
+dist/
+*.o
+*.obj
+*.res
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.log
+config.ini

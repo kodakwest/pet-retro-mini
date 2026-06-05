@@ -1,0 +1,54 @@
+{
+  "games": [
+    {
+      "id": "zork1",
+      "title": "Zork I",
+      "author": "Infocom",
+      "genre": "Adventure",
+      "year": 1980,
+      "file": "games/zork1/zork1.prg",
+      "model": "CBM 4032",
+      "load_addr": "0x0401"
+    },
+    {
+      "id": "miner",
+      "title": "Miner",
+      "author": "Cursor #19",
+      "genre": "Arcade",
+      "year": 1980,
+      "file": "games/miner.prg",
+      "model": "PET 2001",
+      "load_addr": "0x0401"
+    },
+    {
+      "id": "lander",
+      "title": "Lunar Lander",
+      "author": "Public Domain",
+      "genre": "Simulation",
+      "year": 1979,
+      "file": "games/lander.prg",
+      "model": "PET 2001",
+      "load_addr": "0x0401"
+    },
+    {
+      "id": "dungeon",
+      "title": "Dungeon",
+      "author": "Cursor #15",
+      "genre": "RPG",
+      "year": 1980,
+      "file": "games/dungeon.prg",
+      "model": "CBM 4032",
+      "load_addr": "0x0401"
+    },
+    {
+      "id": "petinvaders",
+      "title": "PET Invaders",
+      "author": "mass:werk",
+      "genre": "Arcade",
+      "year": 2002,
+      "file": "games/petinvaders.prg",
+      "model": "CBM 8032",
+      "load_addr": "0x0401"
+    }
+  ]
+}
