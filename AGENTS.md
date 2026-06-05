@@ -10,7 +10,7 @@ Stability over library size. Five great games that work perfectly is better than
 
 ## Agent Role
 
-You configure VICE for PET-only SDL2 builds, write the C launcher/frontend, handle the 5 bundled games, and build the .prg import system. No emulator core writing — VICE team maintains that. Your patches are build-system only.
+You maintain the compact SDL2 launcher/frontend, the built-in PET emulator, the 5 bundled games, and the .prg import system.
 
 ## MVP Games (5 Bundled)
 
@@ -24,8 +24,8 @@ You configure VICE for PET-only SDL2 builds, write the C launcher/frontend, hand
 
 ## Key Constraints
 
-### No core emulator writing
-Patches to VICE are limited to build system, feature stripping (PET-only), UI backend forcing (SDL2), and embedding assets.
+### Emulator scope
+The built-in emulator targets enough official 6502, PET memory, keyboard, ROM, and screen behavior to run the bundled MVP games and imported BASIC .prg files. Keep changes compact and focused on PET 2001/4032/8032 behavior.
 
 ### ROMs
 - Open-source replacements in `roms/open/` (bundled)
@@ -33,7 +33,7 @@ Patches to VICE are limited to build system, feature stripping (PET-only), UI ba
 - First-launch boots on open ROMs immediately — no setup required
 
 ### Game import (future expansion)
-- Drag-and-drop .prg onto window loads it into VICE
+- Drag-and-drop .prg onto window loads it into PET RAM
 - Auto-detect load address from .prg header (2 bytes, LE)
 - Remember imported files in config.ini favorites
 - No metadata system — filename + load address is sufficient
@@ -52,12 +52,8 @@ Patches to VICE are limited to build system, feature stripping (PET-only), UI ba
 ## Build Pipeline
 
 ```bash
-git submodule update --init src/vice/
-cd src/vice && patch -p1 < ../patches/*.diff
-./configure --enable-embedded EMUTYPE=xpet --with-sdl2 --host=x86_64-w64-mingw32
+make clean
 make -j$(nproc)
-cd ../..
-make -C src/launcher
 make dist
 # Output: dist/pet-retro-mini-v0.1.zip
 ```
@@ -73,20 +69,16 @@ pet-retro-mini/
 │   ├── SPEC.md            # Full spec
 │   └── IMPORTING_GAMES.md # How to add .prg files
 ├── src/
-│   ├── vice/              # VICE 3.10 (submodule + patches)
-│   │   └── patches/
-│   │       ├── 01-pet-only.diff
-│   │       ├── 02-strip-gtk.diff
-│   │       └── 03-embed-roms.diff
 │   ├── launcher/
 │   │   ├── main.c         # SDL2 init, main loop
-│   │   ├── menu.c/h       # Menu bar
 │   │   ├── game_launcher.c/h # 5-game loader + .prg importer
 │   │   ├── config.c/h     # Settings
-│   │   ├── crt_effect.c/h # Green phosphor + scanlines
 │   │   └── resources.rc
-│   └── common/
-│       └── compress.c/h   # LZ4 decompression
+│   └── emulator/
+│       ├── cpu.c/h        # 6502 CPU core
+│       ├── pet.c/h        # PET memory, ROM, keyboard, PRG loading
+│       ├── render.c/h     # Chargen-backed PETSCII renderer
+│       └── emulator_runtime.c/h
 ├── games/
 │   ├── manifest.json      # 5-game catalog
 │   ├── zork1/             # Zork I data
@@ -115,7 +107,7 @@ Settings: Model selector, CRT toggle, speed slider
 
 *(Auto-populated)*
 
-- VICE configure: `--enable-embedded EMUTYPE=xpet` for standalone PET-only
+- Built-in PET emulator replaces the previous fake bridge and VICE submodule
 - SDL2 static link: `-static-libgcc -static-libstdc++` flags
 - .prg import: first 2 bytes = LE load address, remaining = payload
 - MVP is 5 games, not 30 — simplifies manifest, browser, testing

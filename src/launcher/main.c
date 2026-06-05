@@ -1,6 +1,6 @@
 #include "config.h"
 #include "game_launcher.h"
-#include "vice_bridge.h"
+#include "emulator_runtime.h"
 
 #include <SDL.h>
 #include <stdio.h>
@@ -223,12 +223,12 @@ static void set_running_screen(app_state *app, const char *title, unsigned int l
 static int model_index_for_name(const char *model)
 {
     if (strstr(model, "2001") != NULL) {
-        return VICE_BRIDGE_MODEL_2001;
+        return PET_RUNTIME_MODEL_2001;
     }
     if (strstr(model, "8032") != NULL) {
-        return VICE_BRIDGE_MODEL_8032;
+        return PET_RUNTIME_MODEL_8032;
     }
-    return VICE_BRIDGE_MODEL_4032;
+    return PET_RUNTIME_MODEL_4032;
 }
 
 static void layout(app_state *app)
@@ -284,8 +284,8 @@ static void open_program(app_state *app, const char *path)
         return;
     }
 
-    if (!vice_bridge_load_prg(path)) {
-        snprintf(message, sizeof(message), "Load failed: %s", vice_bridge_error());
+    if (!pet_runtime_load_prg(path)) {
+        snprintf(message, sizeof(message), "Load failed: %s", pet_runtime_error());
         toast(app, message);
         return;
     }
@@ -311,12 +311,12 @@ static void launch_game(app_state *app, int index)
     model_index = model_index_for_name(app->manifest.games[index].model);
     if (model_index != app->config.model_index) {
         app->config.model_index = model_index;
-        vice_bridge_model(model_index);
+        pet_runtime_model(model_index);
         config_save(&app->config, "config.ini");
     }
-    if (!vice_bridge_load_prg(app->manifest.games[index].file)) {
+    if (!pet_runtime_load_prg(app->manifest.games[index].file)) {
         snprintf(message, sizeof(message), "%s failed: %s", app->manifest.games[index].title,
-                 vice_bridge_error());
+                 pet_runtime_error());
         toast(app, message);
         return;
     }
@@ -369,7 +369,7 @@ static void reset_machine(app_state *app)
     app->active_game = -1;
     strcpy(app->current_title, "BASIC");
     set_basic_screen(app);
-    vice_bridge_reset();
+    pet_runtime_reset();
     toast(app, "Machine reset.");
 }
 
@@ -475,7 +475,7 @@ static void draw_ui(app_state *app)
     }
 
     {
-        SDL_Texture *pet_frame = vice_bridge_frame();
+        SDL_Texture *pet_frame = pet_runtime_frame();
         if (pet_frame != NULL) {
             SDL_Rect dest = sdl_rect(pet_inner);
             SDL_RenderCopy(r, pet_frame, NULL, &dest);
@@ -557,7 +557,7 @@ static void activate_menu_item(app_state *app, int index)
     } else if (menu == 1) {
         if (index >= 0 && index <= 2) {
             app->config.model_index = index;
-            vice_bridge_model(index);
+            pet_runtime_model(index);
             config_save(&app->config, "config.ini");
         } else if (index >= 3 && index <= 5) {
             app->config.speed_index = index - 3;
@@ -582,7 +582,7 @@ static void activate_menu_item(app_state *app, int index)
 static void handle_key(app_state *app, SDL_KeyboardEvent *key)
 {
     int ctrl = (key->keysym.mod & KMOD_CTRL) != 0;
-    vice_bridge_keyboard(key->keysym.sym, key->type == SDL_KEYDOWN);
+    pet_runtime_keyboard(key->keysym.sym, key->type == SDL_KEYDOWN);
     if (key->type != SDL_KEYDOWN) {
         return;
     }
@@ -693,8 +693,8 @@ int main(int argc, char **argv)
         SDL_Quit();
         return 1;
     }
-    if (!vice_bridge_init(app.renderer, app.config.model_index, "roms/open")) {
-        fprintf(stderr, "VICE bridge init failed: %s\n", vice_bridge_error());
+    if (!pet_runtime_init(app.renderer, app.config.model_index, "roms/open")) {
+        fprintf(stderr, "PET emulator init failed: %s\n", pet_runtime_error());
         SDL_DestroyRenderer(app.renderer);
         SDL_DestroyWindow(app.window);
         SDL_Quit();
@@ -719,7 +719,7 @@ int main(int argc, char **argv)
     }
 
     config_save(&app.config, "config.ini");
-    vice_bridge_shutdown();
+    pet_runtime_shutdown();
     SDL_DestroyRenderer(app.renderer);
     SDL_DestroyWindow(app.window);
     SDL_Quit();

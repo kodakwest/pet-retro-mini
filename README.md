@@ -29,4 +29,4 @@ See [BUILDING.md](docs/BUILDING.md). Requires MSYS2 (Windows) or MinGW-w64 cross
 
 ## License
 
-GPL v2. Emulator core based on VICE (GPL v2). SDL2 (MIT) statically linked. Bundled games are public domain, MIT, or explicit freeware. See [docs/GAMES.md](docs/GAMES.md).
+GPL v2. Built-in PET emulator core is part of this project. SDL2 (MIT) statically linked. Bundled games are public domain, MIT, or explicit freeware. See [docs/GAMES.md](docs/GAMES.md).
