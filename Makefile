@@ -54,7 +54,7 @@ else
   endif
 endif
 
-.PHONY: all clean dist info
+.PHONY: all clean dist info boot-test
 
 all: $(TARGET)
 
@@ -75,6 +75,13 @@ $(BUILD_DIR)/launcher/%.o: $(SRC_DIR)/%.c $(SRC_DIR)/*.h $(EMULATOR_DIR)/*.h
 $(BUILD_DIR)/emulator/%.o: $(EMULATOR_DIR)/%.c $(EMULATOR_DIR)/*.h
 	@mkdir -p $(BUILD_DIR)/emulator
 	$(CC) $(CFLAGS) -c $< -o $@
+
+boot-test:
+	@mkdir -p $(BUILD_DIR)/tests
+	$(CC) -std=c99 -Wall -Wextra -O2 -I$(EMULATOR_DIR) \
+		$(EMULATOR_DIR)/cpu.c $(EMULATOR_DIR)/pet.c tests/boot_test.c \
+		-o $(BUILD_DIR)/tests/boot_test
+	$(BUILD_DIR)/tests/boot_test
 
 $(RESOURCE): $(SRC_DIR)/resources.rc $(SRC_DIR)/app.manifest
 	@mkdir -p $(BUILD_DIR)
